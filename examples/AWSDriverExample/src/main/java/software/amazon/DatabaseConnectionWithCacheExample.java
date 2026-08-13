@@ -58,21 +58,21 @@ public class DatabaseConnectionWithCacheExample {
     final Logger LOGGER = Logger.getLogger(DatabaseConnectionWithCacheExample.class.getName());
 
     // Configuring connection properties for the underlying JDBC driver.
-    properties.setProperty("user", USERNAME);
-    properties.setProperty("password", PASSWORD);
+    // properties.setProperty("user", USERNAME);
+    // properties.setProperty("password", PASSWORD);
 
     // Configuring connection properties for the JDBC Wrapper.
     properties.setProperty("wrapperPlugins", "remoteQueryCache");
     properties.setProperty("cacheEndpointAddrRw", CACHE_RW_SERVER_ADDR);
     properties.setProperty("cacheEndpointAddrRo", CACHE_RO_SERVER_ADDR);
     // If the cache server is authenticated with IAM
-    properties.setProperty("cacheName", CACHE_NAME);
-    properties.setProperty("cacheUsername", CACHE_USERNAME);
-    properties.setProperty("cacheIamRegion", CACHE_IAM_REGION);
+    // properties.setProperty("cacheName", CACHE_NAME);
+    // properties.setProperty("cacheUsername", CACHE_USERNAME);
+    // properties.setProperty("cacheIamRegion", CACHE_IAM_REGION);
     // If the cache server is authenticated with traditional username password
     // properties.setProperty("cachePassword", CACHE_PASSWORD);
     properties.setProperty("cacheUseSSL", CACHE_USE_SSL); // "true" or "false"
-    properties.setProperty("cacheTlsCaCertPath", CACHE_TLS_CA_CERT_PATH);
+    // properties.setProperty("cacheTlsCaCertPath", CACHE_TLS_CA_CERT_PATH);
     properties.setProperty("wrapperLogUnclosedConnections", "true");
     properties.setProperty("cacheConnectionTimeoutMs", CACHE_CONNECTION_TIMEOUT);
     properties.setProperty("cacheConnectionPoolSize", CACHE_CONNECTION_POOL_SIZE);
@@ -80,7 +80,7 @@ public class DatabaseConnectionWithCacheExample {
     properties.setProperty("cacheInFlightWriteSizeLimitBytes", CACHE_IN_FLIGHT_WRITE_SIZE_LIMIT);
     properties.setProperty("cacheHealthCheckInHealthyState", CACHE_HEALTH_CHECK_IN_HEALTHY_STATE);
 
-    String queryStr = "/*+ CACHE_PARAM(ttl=300s) */ select * from cinemas";
+    String queryStr = "/*+ CACHE_PARAM(ttl=300s) */ select * from cinemas limit 10";
 
     // Create threads for concurrent connection testing
     ExecutorService executor = Executors.newFixedThreadPool(THREAD_COUNT);
@@ -117,7 +117,7 @@ public class DatabaseConnectionWithCacheExample {
     }
 
     // multi cache endpoint example.
-    runMultiEndPointExample();
+    // runMultiEndPointExample();
   }
 
   /*
