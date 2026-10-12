@@ -58,6 +58,20 @@ props.setProperty("cacheEnableDatabaseMultiTenancy", "true");
 automatically detect whether an application uses supported database session state for tenant
 isolation.
 
+#### Recommended: separate tenants with `cacheKeyPrefix`
+
+If your application needs tenant-separated caching, prefer giving each tenant its own cache keyspace
+over relying on database session-state tracking. Create one connection pool or `DataSource` per
+tenant, and set a unique `cacheKeyPrefix` for each:
+
+```java
+props.setProperty("cacheKeyPrefix", tenantCode); // unique per tenant, max 10 characters
+```
+
+The prefix is fixed for every connection created with these properties, so connections from a
+tenant's pool must serve only that tenant. This approach does not depend on
+`cacheEnableDatabaseMultiTenancy` or on SQL statement detection.
+
 ## Configuration Parameters
 
 | Parameter                           | Available Since Version |  Value  | Required | Description                                                                                                                                                                                                                                                 | Default Value |
@@ -74,7 +88,7 @@ isolation.
 | `cacheEnableDatabaseMultiTenancy`   | 4.5.0 | Boolean |    No    | Adds supported PostgreSQL role/search-path state or MySQL/MariaDB account/role/database state to cache keys as best-effort hardening. Not a security boundary. | `false` |
 | `cacheConnectionTimeoutMs`          | 3.3.0 | Integer |    No    | Cache connection request timeout duration in milliseconds.                                                                                                                                                                                                  | `2000`        |
 | `cacheConnectionPoolSize`           | 3.3.0 | Integer |    No    | Cache connection pool size.                                                                                                                                                                                                                                 | `20`          |
-| `cacheKeyPrefix`                    | 3.3.0 | String  |    No    | Optional static prefix for separating cache keyspaces (max 10 characters). The prefix itself does not track database authorization state. Enable `cacheEnableDatabaseMultiTenancy` to include supported database authorization/session state in cache keys. | `null`        |
+| `cacheKeyPrefix`                    | 3.3.0 | String  |    No    | Optional static prefix for separating cache keyspaces (max 10 characters). Use a distinct prefix per tenant to separate tenant cache entries; see [Recommended: separate tenants with `cacheKeyPrefix`](#recommended-separate-tenants-with-cachekeyprefix). | `null`        |
 | `failWhenCacheDown`                 | 3.3.0 | Boolean |    No    | Whether to throw SQLException on cache failures under Degraded mode or make queries fall back to the database.                                                                                                                                              | `false`       |
 | `cacheInFlightWriteSizeLimitBytes`  | 3.3.0 | Integer |    No    | Maximum in-flight write size in Bytes to the cache server before triggering degraded mode.                                                                                                                                                                  | `50MB`        |
 | `cacheHealthCheckInHealthyState`    | 3.3.0 | Boolean |    No    | Whether to run health checks (pings) in healthy state.                                                                                                                                                                                                      | `false`       |
